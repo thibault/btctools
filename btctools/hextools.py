@@ -25,3 +25,8 @@ def little_endiant_varint(integer):
         format = '<Q'
 
     return prefix + pack(format, integer).encode('hex')
+
+
+def little_endian_uint32(int32):
+    """Convert an integer into a 4 bytes little endian hexa string."""
+    return pack('<I', int32).encode('hex')

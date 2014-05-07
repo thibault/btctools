@@ -1,7 +1,7 @@
 from struct import pack
 
 
-def little_endiant_varint(integer):
+def little_endian_varint(integer):
     """Convert an integer to the Bitcoin variable length integer.
 
     See here for the protocol specification:

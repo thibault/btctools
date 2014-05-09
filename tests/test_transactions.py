@@ -1,5 +1,6 @@
-import unittest
+from __future__ import unicode_literals
 
+import unittest
 
 from transactions import Transaction
 
@@ -36,3 +37,10 @@ class TransactionTests(unittest.TestCase):
             '1EL3y9j8rzZwa8Hxmx2scatb3bh8KKFK6v'
         )
         self.assertEqual(self.tx.outputs[0].amount, 1000)
+
+    def test_transaction_to_hex(self):
+        pass
+
+
+class InputTests(unittest.TestCase):
+    pass

@@ -2,10 +2,10 @@ from __future__ import unicode_literals
 
 import unittest
 
-from addresses.b58 import b58_encode, b58_decode, b58c_encode, b58c_decode
+from encoding import b58_encode, b58_decode, b58c_encode, b58c_decode
 
 
-class B58Tests(unittest.TestCase):
+class EncodingTests(unittest.TestCase):
 
     def test_b58_encode(self):
         self.assertEqual(b58_encode('toto'), '3yd11G')

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import unittest
 
 from hextools import little_endian_varint

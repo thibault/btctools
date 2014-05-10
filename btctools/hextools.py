@@ -15,38 +15,38 @@ def little_endian_varint(integer):
     """
     if integer < 0xfd:
         prefix = ''
-        format = '<B'
+        format = b'<B'
     elif integer <= 0xffff:
         prefix = 'fd'
-        format = '<H'
+        format = b'<H'
     elif integer <= 0xffffffff:
         prefix = 'fe'
-        format = '<I'
+        format = b'<I'
     else:
         prefix = 'ff'
-        format = '<Q'
+        format = b'<Q'
 
     return prefix + pack(format, integer).encode('hex')
 
 
 def little_endian_uint8(int8):
     """Convert an integer into a 1 byte little endian hexa string."""
-    return pack('<B', int8).encode('hex')
+    return pack(b'<B', int8).encode('hex')
 
 
 def little_endian_uint16(int16):
     """Convert an integer into a 2 bytes little endian hexa string."""
-    return pack('<H', int16).encode('hex')
+    return pack(b'<H', int16).encode('hex')
 
 
 def little_endian_uint32(int32):
     """Convert an integer into a 4 bytes little endian hexa string."""
-    return pack('<I', int32).encode('hex')
+    return pack(b'<I', int32).encode('hex')
 
 
 def little_endian_uint64(int32):
     """Convert an integer into a 8 bytes little endian hexa string."""
-    return pack('<Q', int32).encode('hex')
+    return pack(b'<Q', int32).encode('hex')
 
 
 def little_endian_str(string):

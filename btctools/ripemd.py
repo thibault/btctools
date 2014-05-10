@@ -37,6 +37,8 @@
 ## * ftp://ftp.rsasecurity.com/pub/cryptobytes/crypto3n2.pdf
 ## */
 
+from six.moves import range
+
 try:
     import psyco
     psyco.full()
@@ -157,7 +159,7 @@ def RMD160Transform(state, block): #uint32 state[5], uchar block[64]
     if sys.byteorder == 'little':
         x = struct.unpack('<16L', ''.join([chr(x) for x in block[0:64]]))
     else:
-        raise "Error!!"
+        raise ValueError("Error!")
     a = state[0]
     b = state[1]
     c = state[2]
@@ -368,7 +370,7 @@ def RMD160Update(ctx, inp, inplen):
     off = 0
     if inplen >= need:
         if have:
-            for i in xrange(need):
+            for i in range(need):
                 ctx.buffer[have+i] = inp[i]
             RMD160Transform(ctx.state, ctx.buffer)
             off = need
@@ -378,7 +380,7 @@ def RMD160Update(ctx, inp, inplen):
             off += 64
     if off < inplen:
         # memcpy(ctx->buffer + have, input+off, len-off);
-        for i in xrange(inplen - off):
+        for i in range(inplen - off):
             ctx.buffer[have+i] = inp[off+i]
 
 def RMD160Final(ctx):

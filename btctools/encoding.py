@@ -40,7 +40,7 @@ def bytes_to_int(bytes):
 def bytes_to_hex(bytes):
     """Converts an array of bytes into a hex string.
 
-    >>> address = b'\x924\x04 IvM\xbe\xd31\xc7\xd1\xfcI*N\xb5\x00|S'
+    >>> address = '1EL3y9j8rzZwa8Hxmx2scatb3bh8KKFK6v'.encode('utf-8')
     >>> bytes_to_hex(address)
     '9234042049764dbed331c7d1fc492a4eb5007c53'
 

@@ -29,10 +29,11 @@ class Script(object):
 
         Then create the script stack:
 
+            >>> address = '1EL3y9j8rzZwa8Hxmx2scatb3bh8KKFK6v'.encode('utf-8')
             >>> ops = [
             ...     OP_DUP,
             ...     OP_HASH160,
-            ...     b'\x924\x04 IvM\xbe\xd31\xc7\xd1\xfcI*N\xb5\x00|S',
+            ...     address,
             ...     OP_EQUALVERIFY,
             ...     OP_CHECKSIG,
             ... ]

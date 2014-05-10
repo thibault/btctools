@@ -1,24 +1,54 @@
 """Encoding tools.
 
-All encoding inputs and outputs are bytes array.
+The encoding module mostly works from and to bytes arrays.
 
 """
 from __future__ import unicode_literals
 
 import six
+import binascii
 
 from crypto import double_sha256
 
 
 B58 = b'123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
-B256 = b''.join([six.unichr(x) for x in range(256)])
+B256 = b''.join([six.int2byte(x) for x in range(256)])
 
 
+def enforce_bytes(func):
+    """Type checking decorator.
+
+    Working on the correct data type is critical for encoding conversion
+    methods. This decorator makes sure the decorated function first parameter
+    is of the binary type (str or bytes, depending on Python version.
+
+    """
+    def _enforce_bytes(data, *args, **kwargs):
+        if not isinstance(data, six.binary_type):
+            raise ValueError('You need to pass binary data (str in Py2, bytes in Py3')
+        return func(data, *args, **kwargs)
+    return _enforce_bytes
+
+
+@enforce_bytes
 def bytes_to_int(bytes):
     """Converts a bytes array into a big number."""
     return base_to_int(bytes, B256)
 
 
+@enforce_bytes
+def bytes_to_hex(bytes):
+    """Converts an array of bytes into a hex string.
+
+    >>> address = b'\x924\x04 IvM\xbe\xd31\xc7\xd1\xfcI*N\xb5\x00|S'
+    >>> bytes_to_hex(address)
+    '9234042049764dbed331c7d1fc492a4eb5007c53'
+
+    """
+    return binascii.hexlify(bytes)
+
+
+@enforce_bytes
 def base_to_int(string, base_str):
     """Converts an array of bytes encoded in a given base into a binary number."""
     value = 0
@@ -42,6 +72,7 @@ def int_to_base(number, base_str):
     return b''.join(value)
 
 
+@enforce_bytes
 def b58_encode(data):
     """Converts bytes data into a base 58 string."""
     data = base_to_int(data, B256)
@@ -50,6 +81,7 @@ def b58_encode(data):
     return value
 
 
+@enforce_bytes
 def b58_decode(data):
     """Converts bytes data in a base 58 string into a unicode one."""
     data = base_to_int(data, B58)
@@ -58,6 +90,7 @@ def b58_decode(data):
     return value
 
 
+@enforce_bytes
 def b58c_encode(data, version=b'\x00'):
     """Converts bytes data into a base 58 check string.
 
@@ -70,20 +103,21 @@ def b58c_encode(data, version=b'\x00'):
     nb_zeros = len(data) - len(data_without_zeros)
 
     double_hash = double_sha256(data)
-    data = data.encode('utf-8') + double_hash[0:4]
+    data = data + double_hash[0:4]
     number = bytes_to_int(data)
 
     b58 = int_to_base(number, B58)
     return ('1' * nb_zeros) + b58
 
 
+@enforce_bytes
 def b58c_decode(data):
     data_without_ones = data.lstrip(b'1')
     nb_ones = len(data) - len(data_without_ones)
 
     bin = base_to_int(data, B58)
     value = b'\x00' * nb_ones + int_to_base(bin, B256)[:-4]
-    b58c = b58c_encode(value, version='')
+    b58c = b58c_encode(value, version=b'')
 
     if b58c != data:
         raise ValueError('%s is not a base 58 check valid value' % data)

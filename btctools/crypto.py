@@ -3,11 +3,12 @@ from __future__ import unicode_literals
 import hashlib
 import binascii
 
-from ripemd import RIPEMD160
-
 
 def hash160(data):
-    return RIPEMD160(data).digest()
+    ripemd160 = hashlib.new('ripemd160')
+    ripemd160.update(data)
+
+    return ripemd160.digest()
 
 
 def sha256(data):

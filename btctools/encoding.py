@@ -45,7 +45,7 @@ def bytes_to_hex(bytes):
     '9234042049764dbed331c7d1fc492a4eb5007c53'
 
     """
-    return binascii.hexlify(bytes)
+    return binascii.hexlify(bytes).decode('ascii')
 
 
 def hex_to_bytes(hex):
@@ -71,9 +71,10 @@ def int_to_base(number, base_str):
     while number > 0:
         value = [base_str[number % base]] + value
         number -= number % base
-        number /= base
+        number //= base
 
-    return b''.join(value)
+    # Python 2 / 3 compatibility from hell
+    return b''.join(map(six.int2byte, six.iterbytes(value)))
 
 
 @enforce_bytes
@@ -111,7 +112,7 @@ def b58c_encode(data, version=b'\x00'):
     number = bytes_to_int(data)
 
     b58 = int_to_base(number, B58)
-    return ('1' * nb_zeros) + b58
+    return (b'1' * nb_zeros) + b58
 
 
 @enforce_bytes

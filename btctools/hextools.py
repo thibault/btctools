@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 
+import binascii
+
 from struct import pack
+from encoding import bytes_to_hex
 
 
 def little_endian_varint(integer):
@@ -14,44 +17,45 @@ def little_endian_varint(integer):
 
     """
     if integer < 0xfd:
-        prefix = ''
+        prefix = b''
         format = b'<B'
     elif integer <= 0xffff:
-        prefix = 'fd'
+        prefix = b'\xfd'
         format = b'<H'
     elif integer <= 0xffffffff:
-        prefix = 'fe'
+        prefix = b'\xfe'
         format = b'<I'
     else:
-        prefix = 'ff'
+        prefix = b'\xff'
         format = b'<Q'
 
-    return prefix + pack(format, integer).encode('hex')
+    return bytes_to_hex(prefix + pack(format, integer))
 
 
 def little_endian_uint8(int8):
     """Convert an integer into a 1 byte little endian hexa string."""
-    return pack(b'<B', int8).encode('hex')
+    return bytes_to_hex(pack(b'<B', int8))
 
 
 def little_endian_uint16(int16):
     """Convert an integer into a 2 bytes little endian hexa string."""
-    return pack(b'<H', int16).encode('hex')
+    return bytes_to_hex(pack(b'<H', int16))
 
 
 def little_endian_uint32(int32):
     """Convert an integer into a 4 bytes little endian hexa string."""
-    return pack(b'<I', int32).encode('hex')
+    return bytes_to_hex(pack(b'<I', int32))
 
 
 def little_endian_uint64(int32):
     """Convert an integer into a 8 bytes little endian hexa string."""
-    return pack(b'<Q', int32).encode('hex')
+    return bytes_to_hex(pack(b'<Q', int32))
 
 
 def little_endian_str(string):
-    return string[::-1].encode('hex')
+    return bytes_to_hex(string[::-1])
 
 
 def little_endian_hex(hexa):
-    return hexa.decode('hex')[::-1].encode('hex')
+    data = binascii.unhexlify(hexa)
+    return bytes_to_hex(data[::-1])

@@ -48,6 +48,10 @@ def bytes_to_hex(bytes):
     return binascii.hexlify(bytes)
 
 
+def hex_to_bytes(hex):
+    return binascii.unhexlify(hex)
+
+
 @enforce_bytes
 def base_to_int(string, base_str):
     """Converts an array of bytes encoded in a given base into a binary number."""

@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from copy import deepcopy
 
 from scripts.base import PayToPubkeyScript
 from encoding import (
@@ -111,4 +112,17 @@ class Transaction:
             http://www.righto.com/2014/02/bitcoins-hard-way-using-raw-bitcoin.html
 
         """
-        pass
+        txCopy = self.generate_signing_form(index, privkey)
+        # sign transaction input
+        # set input scriptSig
+
+    def generate_signing_form(self, index):
+        """Return a copy of current transaction, ready to be signed."""
+        tx = deepcopy(self)
+
+        # generate pubkey from privkey
+        # generate address from pubkey
+        # generate script from address
+        # set this as the input script
+
+        return tx

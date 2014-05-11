@@ -45,5 +45,16 @@ class TransactionTests(unittest.TestCase):
         )
 
 
-class InputTests(unittest.TestCase):
-    pass
+class SigningTests(unittest.TestCase):
+
+    def test_signing_simple_transaction(self):
+        inputs = [
+            ('b0ff74bb0dd894797153ccb862c9f9a488e657452647ada440fe1006ece95c78', 0),
+        ]
+
+        outputs = [
+            ('115MDLurYMiExVwfTU7R4kE43zrdVoC2pz', 50000000),
+        ]
+
+        tx = Transaction(inputs, outputs)
+        txCopy = tx.generate_signing_form(0, '1234')

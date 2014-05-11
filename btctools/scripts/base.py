@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 import six
 
 from scripts import constants as C
-from encoding import b58c_decode, bytes_to_hex, hex_to_bytes
-from hextools import (
-    little_endian_uint8, little_endian_uint16, little_endian_uint32
+from encoding import (
+    b58c_decode, bytes_to_hex, little_endian_uint8, little_endian_uint16,
+    little_endian_uint32
 )
 
 
@@ -60,17 +60,15 @@ class Script(object):
 
         if str_len <= 0xff:
             push_code = C.OP_PUSHDATA1
-            len_hex = little_endian_uint8(str_len)
+            bin_len = little_endian_uint8(str_len)
         elif str_len <= 0xffff:
             push_code = C.OP_PUSHDATA2
-            len_hex = little_endian_uint16(str_len)
+            bin_len = little_endian_uint16(str_len)
         elif str_len <= 0xffffffff:
             push_code = C.OP_PUSHDATA4
-            len_hex = little_endian_uint32(str_len)
+            bin_len = little_endian_uint32(str_len)
         else:
             raise ValueError('The content to push is too big')
-
-        bin_len = hex_to_bytes(len_hex)
 
         return b''.join([
             six.int2byte(push_code),

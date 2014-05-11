@@ -39,7 +39,10 @@ class TransactionTests(unittest.TestCase):
         self.assertEqual(self.tx.outputs[0].amount, 1000)
 
     def test_transaction_to_hex(self):
-        pass
+        self.assertEqual(
+            self.tx.to_hex(),
+            '0100000002785ce9ec0610fe40a4ad47264557e688a4f9c962b8cc53717994d80dbb74ffb00000000000ffffffff226aae7b51aa24bd4e06f379f71a1c32417289b22faf3bf2452d634506183d680000000000ffffffff02e8030000000000001a76a94c149234042049764dbed331c7d1fc492a4eb5007c5388ac689bf402000000001a76a94c1400d289624679d48aae98137561f1f9df60791a7c88ac00000000'
+        )
 
 
 class InputTests(unittest.TestCase):

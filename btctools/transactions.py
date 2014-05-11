@@ -69,6 +69,7 @@ class Transaction:
 
         self.lock_time = 0
         self.version = 1
+        self.is_signed = False
 
     @property
     def in_counter(self):
@@ -100,3 +101,14 @@ class Transaction:
     def to_hex(self):
         """Return the raw transaction as an hexadecimal string."""
         return bytes_to_hex(self.to_bin())
+
+    def sign_input(self, index, privkey):
+        """Sign the input at the given index.
+
+        Signing transactions is somewhat tedious. See here:
+            https://en.bitcoin.it/wiki/OP_CHECKSIG
+            http://bitcoin.stackexchange.com/questions/3374/how-to-redeem-a-basic-tx
+            http://www.righto.com/2014/02/bitcoins-hard-way-using-raw-bitcoin.html
+
+        """
+        pass

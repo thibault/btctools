@@ -116,7 +116,7 @@ class Transaction:
         # sign transaction input
         # set input scriptSig
 
-    def generate_signing_form(self, index):
+    def generate_signing_form(self, index, privkey):
         """Return a copy of current transaction, ready to be signed."""
         tx = deepcopy(self)
 

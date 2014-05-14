@@ -10,7 +10,7 @@ from __future__ import unicode_literals
 import six
 from os import urandom
 
-from encoding import bytes_to_int, bytes_to_hex
+from encoding import bytes_to_int, bytes_to_hex, b58c_encode
 from crypto import sha256
 
 
@@ -41,6 +41,19 @@ class PrivateKey(object):
 
     def __str__(self):
         return bytes_to_hex(self.bits)
+
+    def as_hex(self):
+        return bytes_to_hex(self.bits)
+
+    def as_wif(self):
+        """Wallet Import Format generation.
+
+        See here:
+            https://en.bitcoin.it/wiki/Wallet_import_format
+
+        """
+        b58 = b58c_encode(self.bits, b'\x80')
+        return b58
 
 
 def get_random_key():

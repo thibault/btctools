@@ -11,7 +11,8 @@ import six
 from os import urandom
 
 from encoding import bytes_to_int, int_to_bytes, bytes_to_hex, b58c_encode
-from crypto import sha256, secp256k1_multiply
+from crypto import sha256
+from curves import secp256k1_multiply
 
 
 PRIVKEY_LENGTH = 256 / 8  # 256 bits / 32 bytes

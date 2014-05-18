@@ -37,6 +37,10 @@ def bytes_to_int(bytes):
     return base_to_int(bytes, B256)
 
 
+def int_to_bytes(data):
+    return int_to_base(data, B256)
+
+
 @enforce_bytes
 def bytes_to_hex(bytes):
     """Converts an array of bytes into a hex string.

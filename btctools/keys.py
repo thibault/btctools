@@ -10,13 +10,13 @@ from __future__ import unicode_literals
 import six
 from os import urandom
 
-from encoding import bytes_to_int, bytes_to_hex, b58c_encode
-from crypto import sha256
+from encoding import bytes_to_int, int_to_bytes, bytes_to_hex, b58c_encode
+from crypto import sha256, secp256k1_multiply
 
 
 PRIVKEY_LENGTH = 256 / 8  # 256 bits / 32 bytes
 PRIVKEY_MIN = 0x01
-PRIVKEY_MAX = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
+PRIVKEY_MAX = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
 
 
 class KeyError(ValueError):
@@ -54,6 +54,19 @@ class PrivateKey(object):
         """
         b58 = b58c_encode(self.bits, b'\x80')
         return b58
+
+    def get_public_key(self):
+        """Get the associated public key."""
+        n = bytes_to_int(self.bits)
+        nG = secp256k1_multiply(n)
+
+        pubkey = b''.join([
+            b'\x04',
+            int_to_bytes(nG[0]).ljust(32, b'\x00'),
+            int_to_bytes(nG[1]).ljust(32, b'\x00')
+        ])
+
+        return pubkey
 
 
 def get_random_key():

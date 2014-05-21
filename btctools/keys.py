@@ -10,7 +10,8 @@ from __future__ import unicode_literals
 import six
 from os import urandom
 
-from encoding import bytes_to_int, int_to_bytes, bytes_to_hex, b58c_encode
+from encoding import (
+    bytes_to_int, int_to_bytes, bytes_to_hex, hex_to_bytes, b58c_encode)
 from crypto import sha256
 from curves import secp256k1_multiply
 
@@ -84,3 +85,9 @@ def get_random_key():
         key_int = bytes_to_int(key)
 
     return PrivateKey(key)
+
+
+def get_key_from_hex(hexa):
+    """Creates a private key from an hexa string."""
+    bits = hex_to_bytes(hexa)
+    return PrivateKey(bits)

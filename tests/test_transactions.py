@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import unittest
 
 from transactions import Transaction
+from keys import get_key_from_hex
 
 
 class TransactionTests(unittest.TestCase):
@@ -47,6 +48,10 @@ class TransactionTests(unittest.TestCase):
 
 class SigningTests(unittest.TestCase):
 
+    def setUp(self):
+        hexa = '0C28FCA386C7A227600B2FE50B7CAE11EC86D3BF1FBE471BE89827E19D72AA1D'
+        self.key = get_key_from_hex(hexa)
+
     def test_signing_simple_transaction(self):
         inputs = [
             ('b0ff74bb0dd894797153ccb862c9f9a488e657452647ada440fe1006ece95c78', 0),
@@ -57,4 +62,4 @@ class SigningTests(unittest.TestCase):
         ]
 
         tx = Transaction(inputs, outputs)
-        txCopy = tx.generate_signing_form(0, '1234')
+        txCopy = tx.generate_signing_form(0, self.key)

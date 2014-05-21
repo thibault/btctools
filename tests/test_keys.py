@@ -2,8 +2,7 @@ from __future__ import unicode_literals
 
 import unittest
 
-from keys import KeyError, PrivateKey, get_random_key
-from encoding import bytes_to_int
+from keys import KeyError, PrivateKey, get_random_key, get_key_from_hex
 
 
 class PrivateKeyTests(unittest.TestCase):
@@ -32,6 +31,14 @@ class PrivateKeyTests(unittest.TestCase):
     def test_get_random_key(self):
         key = get_random_key()
         self.assertTrue(isinstance(key, PrivateKey))
+
+    def test_get_key_from_hex(self):
+        hexa = '0C28FCA386C7A227600B2FE50B7CAE11EC86D3BF1FBE471BE89827E19D72AA1D'
+        key = get_key_from_hex(hexa)
+        self.assertEqual(
+            key.as_hex(),
+            '0c28fca386c7a227600b2fe50b7cae11ec86d3bf1fbe471be89827e19d72aa1d'
+        )
 
     def test_as_hex(self):
         self.assertEqual(

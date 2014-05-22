@@ -122,3 +122,9 @@ class PayToPubkeyScript(Script):
             C.OP_CHECKSIG,
         ]
         return super(PayToPubkeyScript, self).__init__(ops)
+
+
+class ScriptSig(Script):
+    def __init__(self, signature, pubkey):
+        ops = [signature, pubkey]
+        return super(ScriptSig, self).__init__(ops)

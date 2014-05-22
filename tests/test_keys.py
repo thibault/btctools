@@ -60,3 +60,10 @@ class PrivateKeyTests(unittest.TestCase):
             pubkey,
             key
         )
+
+    def test_get_address(self):
+        address = self.key.get_address()
+        self.assertEqual(
+            '1GAehh7TsJAHuUAeKZcXf5CnwuGuGgyX2S',
+            address
+        )

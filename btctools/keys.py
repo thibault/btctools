@@ -12,7 +12,7 @@ from os import urandom
 
 from encoding import (
     bytes_to_int, int_to_bytes, bytes_to_hex, hex_to_bytes, b58c_encode)
-from crypto import sha256
+from crypto import sha256, hash160
 from curves import secp256k1_multiply
 
 
@@ -57,6 +57,7 @@ class PrivateKey(object):
         b58 = b58c_encode(self.bits, b'\x80')
         return b58
 
+    # TODO memoize
     def get_public_key(self):
         """Get the associated public key."""
         n = bytes_to_int(self.bits)
@@ -69,6 +70,12 @@ class PrivateKey(object):
         ])
 
         return pubkey
+
+    def get_address(self):
+        """Get the associated Bitcoin address."""
+        pubkey = self.get_public_key()
+        hash = hash160(sha256(pubkey))
+        return b58c_encode(hash)
 
 
 def get_random_key():

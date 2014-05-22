@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 from copy import deepcopy
 
-from scripts.base import PayToPubkeyScript
+from scripts.base import EmptyScript, PayToPubkeyScript
 from encoding import (
     bytes_to_hex, little_endian_varint, little_endian_uint32,
     little_endian_str, little_endian_hex, little_endian_uint64
@@ -14,7 +14,7 @@ class Input:
         self.tx_hash = tx_hash
         self.output_id = output_id
         self.sequence_no = 0xffffffff
-        self.script = b''
+        self.script = EmptyScript()
 
     @property
     def script_length(self):
@@ -25,7 +25,7 @@ class Input:
             little_endian_hex(self.tx_hash),
             little_endian_uint32(self.output_id),
             little_endian_varint(self.script_length),
-            little_endian_str(self.script),
+            little_endian_str(self.script.to_bin()),
             little_endian_uint32(self.sequence_no),
         ])
 

@@ -99,8 +99,18 @@ class Script(object):
         return len(self.to_bin())
 
 
-class PayToPubkeyScript(Script):
+class EmptyScript(Script):
+    """An empty scripts.
 
+    Empty scripts are used for inputs in raw transactions (before signing).
+
+    """
+    def __init__(self):
+        ops = []
+        return super(EmptyScript, self).__init__(ops)
+
+
+class PayToPubkeyScript(Script):
     def __init__(self, address):
         bin_address = b58c_decode(address.encode('ascii'))
 

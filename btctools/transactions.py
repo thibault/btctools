@@ -2,10 +2,11 @@ from __future__ import unicode_literals
 
 from copy import deepcopy
 
-from scripts.base import EmptyScript, PayToPubkeyScript
+from scripts.base import EmptyScript, PayToPubkeyScript, ScriptSig
 from encoding import (
     bytes_to_hex, little_endian_varint, little_endian_uint32,
-    little_endian_str, little_endian_hex, little_endian_uint64
+    little_endian_str, little_endian_hex, little_endian_uint64,
+    der_encode
 )
 
 
@@ -112,17 +113,31 @@ class Transaction:
             http://www.righto.com/2014/02/bitcoins-hard-way-using-raw-bitcoin.html
 
         """
-        txCopy = self.generate_signing_form(index, privkey)
-        # sign transaction input
-        # set input scriptSig
+        address = privkey.get_address()
+        txCopy = self.generate_signing_form(index, address)
 
-    def generate_signing_form(self, index, privkey):
+        pubkey = privkey.get_public_key()
+        signature = txCopy.get_signature(index, privkey)
+        script = ScriptSig(signature, pubkey)
+        self.inputs[index].script = script
+
+    def generate_signing_form(self, index, address):
         """Return a copy of current transaction, ready to be signed."""
         tx = deepcopy(self)
+        for input in self.inputs:
+            input.script = EmptyScript()
 
-        # generate pubkey from privkey
-        # generate address from pubkey
-        # generate script from address
-        # set this as the input script
+        script = PayToPubkeyScript(address)
+        self.inputs[index].script = script
+
+        # TODO
+        # Hashtypes
 
         return tx
+
+    def get_signature(self, index, privkey):
+        """Get the signature for the current transaction."""
+        # get transaction + hashcode as binary
+        # double hash this result
+        # sign this using ecdsa with the privkey
+        return der_encode(xxx) + binary_hashcode

@@ -49,10 +49,10 @@ class TransactionTests(unittest.TestCase):
 class SigningTests(unittest.TestCase):
 
     def setUp(self):
-        hexa = '0C28FCA386C7A227600B2FE50B7CAE11EC86D3BF1FBE471BE89827E19D72AA1D'
-        self.key = get_key_from_hex(hexa)
+        privkey_hexa = '0C28FCA386C7A227600B2FE50B7CAE11EC86D3BF1FBE471BE89827E19D72AA1D'
+        self.key = get_key_from_hex(privkey_hexa)
 
-    def test_signing_simple_transaction(self):
+    def test_generate_signing_form(self):
         inputs = [
             ('b0ff74bb0dd894797153ccb862c9f9a488e657452647ada440fe1006ece95c78', 0),
         ]
@@ -63,3 +63,8 @@ class SigningTests(unittest.TestCase):
 
         tx = Transaction(inputs, outputs)
         txCopy = tx.generate_signing_form(0, self.key)
+        hexa = '0100000001785ce9ec0610fe40a4ad47264557e688a4f9c962b8cc53717994d80dbb74ffb00000000000ffffffff0180f0fa02000000001a76a94c1400d289624679d48aae98137561f1f9df60791a7c88ac00000000'
+        self.assertEqual(
+            txCopy.to_hex(),
+            hexa
+        )

@@ -1,5 +1,8 @@
 from __future__ import unicode_literals
 
+from random import randint
+from encoding import bytes_to_int
+
 
 # Secp256k1 parameters
 # See https://en.bitcoin.it/wiki/Secp256k1
@@ -171,8 +174,28 @@ class Inf(Point):
         return self
 
 
+class ECDSA(object):
+    def __init__(self, curve, generator):
+        self.curve = curve
+        self.G = generator
+
+    def generate_k(self):
+        # TODO deterministic generate k
+        k = randint(1, self.curve.p - 1)
+        return k
+
+    def sign(self, message, privkey):
+        N = self.curve.p
+        msg = bytes_to_int(message)
+        k = self.generate_k()
+        r, j = k * self.G
+        s = (mod_inverse(k, N) * (msg + r * privkey.as_int())) % N
+        return r, s
+
+
 secp256k1 = EllipticCurve(A, B, P)
 G = Point(secp256k1, GX, GY)
+secp256k1_ecdsa = ECDSA(secp256k1, G)
 
 
 def secp256k1_multiply(n):
@@ -183,3 +206,13 @@ def secp256k1_multiply(n):
 
     """
     return n * G
+
+
+def secp256k1_sign(message, privkey):
+    """Sign message using Elliptic Curve DSA.
+
+    See here:
+        http://en.wikipedia.org/wiki/Elliptic_Curve_DSA
+
+    """
+    return secp256k1_ecdsa.sign(message, privkey)

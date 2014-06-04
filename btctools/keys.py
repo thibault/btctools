@@ -57,6 +57,9 @@ class PrivateKey(object):
         b58 = b58c_encode(self.bits, b'\x80')
         return b58
 
+    def as_int(self):
+        return bytes_to_int(self.bits)
+
     # TODO memoize
     def get_public_key(self):
         """Get the associated public key."""

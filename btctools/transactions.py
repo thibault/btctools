@@ -107,11 +107,20 @@ class Transaction:
     def sign_input(self, index, privkey):
         """Sign the input at the given index.
 
-        Signing transactions is somewhat tedious. See here:
+        Signing transactions is quite a tedious process. See here:
             https://en.bitcoin.it/wiki/OP_CHECKSIG
             http://bitcoin.stackexchange.com/questions/3374/how-to-redeem-a-basic-tx
             http://www.righto.com/2014/02/bitcoins-hard-way-using-raw-bitcoin.html
 
+        Here is a quick summary:
+            1) Create a copy txCopy of the current transaction
+            2) Remove from txCopy data that must not be taken into account
+               during the signature (e.g other inputs)
+            3) Set the redeemed transaction's ScriptPubkey as the txCopy's
+               input script.
+            4) Generate an ECDSA signature of txCopy
+            5) Generate a ScriptSig and affect it to the transaction's input
+               script
         """
         address = privkey.get_address()
         txCopy = self.generate_signing_form(index, address)

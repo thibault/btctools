@@ -62,9 +62,22 @@ class SigningTests(unittest.TestCase):
         ]
 
         tx = Transaction(inputs, outputs)
-        txCopy = tx.generate_signing_form(0, self.key)
+        txCopy = tx.generate_signing_form(0, self.key.get_address())
         hexa = '0100000001785ce9ec0610fe40a4ad47264557e688a4f9c962b8cc53717994d80dbb74ffb00000000000ffffffff0180f0fa02000000001a76a94c1400d289624679d48aae98137561f1f9df60791a7c88ac00000000'
-        self.assertEqual(
-            txCopy.to_hex(),
-            hexa
-        )
+        self.assertEqual(txCopy.to_hex(), hexa)
+
+    def test_generate_sign_input(self):
+        inputs = [
+            ('1f0e4857f5d4c5df65dd1186a206e56827fcdd81c8c4ef538115b76941a48587', 1),
+        ]
+
+        outputs = [
+            ('1ENnzep2ivWYqXjAodTueiZscT6kunAyYs', 9000),
+        ]
+        # sha256('Satoshi Nakamoto')
+        privkey = get_key_from_hex('a0dc65ffca799873cbea0ac274015b9526505daaaed385155425f7337704883e')
+
+        tx = Transaction(inputs, outputs)
+        tx.sign_input(0, privkey)
+        hexa = ''
+        self.assertEqual(tx.to_hex(), hexa)

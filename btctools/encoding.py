@@ -135,6 +135,38 @@ def b58c_decode(data):
     return value[1:]
 
 
+def der_encode_signature(r, s):
+    """Encode a signature as der.
+
+    See http://bitcoin.stackexchange.com/a/12556
+
+    """
+    left = der_encode_integer(r)
+    right = der_encode_integer(s)
+    length = int_to_bytes(len(left + right))
+
+    data = b'\x30' + length + left + right
+    return data
+
+
+def der_encode_integer(r):
+    assert r >= 0
+    assert isinstance(r, (int, long))
+
+    h = b'%x' % r
+    if len(h) % 2:
+        h = b'0' + h
+    s = binascii.unhexlify(h)
+    num = s[0] if isinstance(s[0], (int, long)) else ord(s[0])
+    if num <= 0x7f:
+        return b'\x02' + int_to_bytes(len(s)) + s
+    else:
+        # DER integers are two's complement, so if the first byte is
+        # 0x80-0xff then we need an extra 0x00 byte to prevent it from
+        # looking negative.
+        return b'\x02' + int_to_bytes(len(s) + 1) + b'\x00' + s
+
+
 def little_endian_varint(integer):
     """Convert an integer to the Bitcoin variable length integer.
 

@@ -4,10 +4,18 @@ from copy import deepcopy
 
 from scripts.base import EmptyScript, PayToPubkeyScript, ScriptSig
 from encoding import (
-    bytes_to_hex, little_endian_varint, little_endian_uint32,
+    int_to_bytes, bytes_to_hex, little_endian_varint, little_endian_uint32,
     little_endian_str, little_endian_hex, little_endian_uint64,
-    der_encode
+    der_encode_signature
 )
+from crypto import double_sha256
+from curves import secp256k1_sign
+
+
+SIGHASH_ALL = 0x00000001
+SIGHASH_NONE = 0x00000002
+SIGHASH_SINGLE = 0x00000003
+SIGHASH_ANYONECANPAY = 0x00000080
 
 
 class Input:
@@ -126,7 +134,7 @@ class Transaction:
         txCopy = self.generate_signing_form(index, address)
 
         pubkey = privkey.get_public_key()
-        signature = txCopy.get_signature(index, privkey)
+        signature = txCopy.get_signature(privkey)
         script = ScriptSig(signature, pubkey)
         self.inputs[index].script = script
 
@@ -144,9 +152,11 @@ class Transaction:
 
         return tx
 
-    def get_signature(self, index, privkey):
+    def get_signature(self, privkey, hashcode=SIGHASH_ALL):
         """Get the signature for the current transaction."""
-        # get transaction + hashcode as binary
-        # double hash this result
-        # sign this using ecdsa with the privkey
-        return der_encode(xxx) + binary_hashcode
+        message = self.to_bin() + int_to_bytes(hashcode)
+        msg_hash = double_sha256(message)
+        signature = secp256k1_sign(msg_hash, privkey)
+        bin_hashcode = int_to_bytes(hashcode)
+        encoded_signature = der_encode_signature(signature[0], signature[1]) + bin_hashcode
+        return encoded_signature

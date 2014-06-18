@@ -158,6 +158,9 @@ class Inf(Point):
     def __init__(self, curve):
         self.curve = curve
 
+    def __str__(self):
+        return 'Inf'
+
     def __eq__(self, Q):
         return isinstance(Q, Inf)
 

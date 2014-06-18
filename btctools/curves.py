@@ -169,7 +169,7 @@ class Inf(Point):
         return self
 
     def __add__(self, Q):
-        """P + 0 = 0"""
+        """P + 0 = P"""
         return Q
 
     def __mul__(self, n):

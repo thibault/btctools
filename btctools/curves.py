@@ -12,7 +12,7 @@ B = 7
 GX = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798
 GY = 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8
 G = (GX, GY)
-INF = (0, 0)
+N = 0XFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
 
 
 def mod_inverse(a, n):
@@ -136,14 +136,14 @@ class Point(object):
 
         else:
             Q = self
-            R = self if n & 1 == 1 else Inf(self.curve)
+            R = Inf(self.curve)
 
-            i = 2
+            i = 1
             while i <= n:
-                Q = Q + Q
-
                 if n & i == i:
-                    R = Q + R
+                    R = R + Q
+
+                Q = Q + Q
 
                 i = i << 1
 

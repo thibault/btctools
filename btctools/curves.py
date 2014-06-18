@@ -178,27 +178,28 @@ class Inf(Point):
 
 
 class ECDSA(object):
-    def __init__(self, curve, generator):
+    def __init__(self, curve, generator, order):
         self.curve = curve
         self.G = generator
+        self.n = order
 
     def generate_k(self):
         # TODO deterministic generate k
-        k = randint(1, self.curve.p - 1)
+        k = randint(1, self.n - 1)
         return k
 
-    def sign(self, message, privkey):
-        N = self.curve.p
-        msg = bytes_to_int(message)
+    def sign(self, msghash, privkey):
+        msg = bytes_to_int(msghash)
         k = self.generate_k()
-        r, j = k * self.G
-        s = (mod_inverse(k, N) * (msg + r * privkey.as_int())) % N
+        i, j = k * self.G
+        r = i % self.n
+        s = (mod_inverse(k, self.n) * (msg + r * privkey.as_int())) % self.n
         return r, s
 
 
 secp256k1 = EllipticCurve(A, B, P)
 G = Point(secp256k1, GX, GY)
-secp256k1_ecdsa = ECDSA(secp256k1, G)
+secp256k1_ecdsa = ECDSA(secp256k1, G, N)
 
 
 def secp256k1_multiply(n):
@@ -208,6 +209,7 @@ def secp256k1_multiply(n):
         http://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication
 
     """
+    n = n % N
     return n * G
 
 

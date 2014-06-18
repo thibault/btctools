@@ -2,7 +2,8 @@ from __future__ import unicode_literals
 
 import unittest
 
-from keys import KeyError, PrivateKey, get_random_key, get_key_from_hex
+from keys import (
+    KeyError, PrivateKey, get_random_key, get_key_from_hex, get_vanity_key)
 
 
 class PrivateKeyTests(unittest.TestCase):
@@ -67,3 +68,9 @@ class PrivateKeyTests(unittest.TestCase):
             '1GAehh7TsJAHuUAeKZcXf5CnwuGuGgyX2S',
             address
         )
+
+    def test_get_vanity_key(self):
+        prefix = 'A'
+        key = get_vanity_key(prefix)
+        address = key.get_address()
+        self.assertTrue(address[1:].startswith(prefix))

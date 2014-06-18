@@ -97,6 +97,15 @@ def get_random_key():
     return PrivateKey(key)
 
 
+def get_vanity_key(prefix):
+    address = ''
+    while not address[1:].startswith(prefix):
+        key = get_random_key()
+        address = key.get_address()
+
+    return key
+
+
 def get_key_from_hex(hexa):
     """Creates a private key from an hexa string."""
     bits = hex_to_bytes(hexa)

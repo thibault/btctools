@@ -68,8 +68,8 @@ class PrivateKey(object):
 
         pubkey = b''.join([
             b'\x04',
-            int_to_bytes(nG[0]).ljust(32, b'\x00'),
-            int_to_bytes(nG[1]).ljust(32, b'\x00')
+            int_to_bytes(nG[0]).rjust(32, b'\x00'),
+            int_to_bytes(nG[1]).rjust(32, b'\x00')
         ])
 
         return pubkey
